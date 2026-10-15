@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema de Biblioteca Digital da Universidade Rovuma">
+  <title>Biblioteca Digital | UniRovuma</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Página inicial da Biblioteca Digital">
+      <span class="brand-mark">UR</span>
+      <span><strong>Biblioteca Digital</strong><small>Universidade Rovuma</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Navegação principal">
+      <button class="nav-link active" data-view="inicio">Início</button>
+      <button class="nav-link" data-view="acervo">Acervo digital</button>
+      <button class="nav-link" data-view="emprestimos">Meus empréstimos</button>
+      <button class="nav-link admin-only" data-view="admin">Administração</button>
+    </nav>
+    <div class="account-actions">
+      <span id="userBadge" class="user-badge">Visitante</span>
+      <button id="loginButton" class="btn btn-outline">Entrar</button>
+      <button id="logoutButton" class="btn btn-outline hidden">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-inicio" class="view active">
+      <section class="hero">
+        <div class="hero-content">
+          <span class="eyebrow">CONHECIMENTO SEM FRONTEIRAS</span>
+          <h1>O conhecimento<br><span>ao alcance de todos.</span></h1>
+          <p>Pesquise livros, consulte recursos académicos e organize as suas leituras num só lugar.</p>
+          <form id="heroSearch" class="hero-search">
+            <label class="sr-only" for="heroQuery">Pesquisar por título, autor ou palavra-chave</label>
+            <input id="heroQuery" type="search" placeholder="Pesquisar título, autor ou palavra-chave...">
+            <button class="btn btn-primary" type="submit">Pesquisar</button>
+          </form>
+          <div class="hero-notes"><span>✓ Pesquisa rápida</span><span>✓ Acervo organizado</span><span>✓ Acesso académico</span></div>
+        </div>
+        <div class="hero-illustration" aria-hidden="true">
+          <div class="book-stack"><div class="book book-one"></div><div class="book book-two"></div><div class="book book-three"></div><div class="book book-four"></div></div>
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="floating-card"><span>📚</span><div><strong>Aprender sempre</strong><small>Uma página de cada vez</small></div></div>
+        </div>
+      </section>
+
+      <section class="stats-row" aria-label="Estatísticas do acervo">
+        <article class="stat-card"><span class="stat-icon">▤</span><div><strong id="statBooks">0</strong><small>Obras no catálogo</small></div></article>
+        <article class="stat-card"><span class="stat-icon">◉</span><div><strong id="statAvailable">0</strong><small>Disponíveis</small></div></article>
+        <article class="stat-card"><span class="stat-icon">↗</span><div><strong id="statLoans">0</strong><small>Empréstimos activos</small></div></article>
+        <article class="stat-card"><span class="stat-icon">♙</span><div><strong id="statUsers">0</strong><small>Utilizadores</small></div></article>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading"><div><span class="eyebrow">EXPLORE O CATÁLOGO</span><h2>Obras em destaque</h2><p>Uma selecção de recursos para apoiar os seus estudos.</p></div><button class="text-button" data-view="acervo">Ver todo o acervo →</button></div>
+        <div id="featuredBooks" class="book-grid"></div>
+      </section>
+      <section class="info-banner"><div class="info-icon">✦</div><div><h3>O seu próximo conhecimento começa aqui</h3><p>Entre na sua conta para reservar obras, acompanhar empréstimos e manter o seu histórico de leitura.</p></div><button class="btn btn-light" id="bannerLogin">Aceder à conta</button></section>
+    </section>
+
+    <section id="view-acervo" class="view">
+      <div class="page-heading"><div><span class="eyebrow">CATÁLOGO UNIVERSITÁRIO</span><h1>Acervo digital</h1><p>Encontre obras por título, autor, género ou ano de publicação.</p></div><span id="catalogCount" class="count-pill">0 obras</span></div>
+      <div class="filter-panel">
+        <label class="search-field"><span>⌕</span><input id="catalogQuery" type="search" placeholder="Pesquisar no catálogo..."></label>
+        <select id="genreFilter" aria-label="Filtrar por género"><option value="">Todos os géneros</option></select>
+        <select id="yearFilter" aria-label="Filtrar por ano"><option value="">Todos os anos</option></select>
+        <select id="availabilityFilter" aria-label="Filtrar por disponibilidade"><option value="">Qualquer disponibilidade</option><option value="true">Disponíveis</option><option value="false">Indisponíveis</option></select>
+        <select id="sortFilter" aria-label="Ordenar resultados"><option value="relevance">Mais relevantes</option><option value="title">Título (A–Z)</option><option value="year">Ano (mais recente)</option></select>
+      </div>
+      <div id="catalogBooks" class="book-grid"></div>
+      <p id="emptyCatalog" class="empty-state hidden">Nenhuma obra encontrada. Experimente alterar os filtros.</p>
+    </section>
+
+    <section id="view-emprestimos" class="view">
+      <div class="page-heading"><div><span class="eyebrow">ÁREA PESSOAL</span><h1>Meus empréstimos</h1><p>Acompanhe os empréstimos e as reservas associados à sua conta.</p></div></div>
+      <div id="loansContent"></div>
+    </section>
+
+    <section id="view-admin" class="view">
+      <div class="page-heading"><div><span class="eyebrow">GESTÃO DA BIBLIOTECA</span><h1>Painel administrativo</h1><p>Faça a gestão do catálogo, utilizadores, empréstimos e indicadores.</p></div><button class="btn btn-primary" id="addBookButton">＋ Cadastrar obra</button></div>
+      <div class="admin-tabs"><button class="admin-tab active" data-admin-tab="overview">Visão geral</button><button class="admin-tab" data-admin-tab="books">Obras</button><button class="admin-tab" data-admin-tab="users">Utilizadores</button><button class="admin-tab" data-admin-tab="loans">Empréstimos e reservas</button></div>
+      <div id="adminContent"></div>
+    </section>
+  </main>
+
+  <footer><div class="footer-brand"><span class="brand-mark">UR</span><div><strong>Biblioteca Digital UniRovuma</strong><small>Universidade Rovuma · CEAD · Nampula</small></div></div><p>Protótipo académico para demonstração. Os dados deste exemplo ficam guardados neste navegador.</p><span>© <span id="currentYear"></span> UniRovuma</span></footer>
+
+  <dialog id="authDialog" class="modal">
+    <form id="authForm" method="dialog">
+      <button class="modal-close" type="button" data-close="authDialog" aria-label="Fechar">×</button>
+      <span class="eyebrow">BIBLIOTECA DIGITAL</span><h2 id="authTitle">Entrar na sua conta</h2>
+      <p id="authDescription" class="muted">Aceda aos empréstimos e às reservas.</p>
+      <div id="registerNameGroup" class="form-group hidden"><label for="authName">Nome completo</label><input id="authName" autocomplete="name"></div>
+      <div class="form-group"><label for="authEmail">E-mail</label><input id="authEmail" type="email" required autocomplete="email" placeholder="nome@exemplo.com"></div>
+      <div class="form-group"><label for="authPassword">Palavra-passe</label><input id="authPassword" type="password" required minlength="4" autocomplete="current-password" placeholder="Introduza a palavra-passe"></div>
+      <div id="authError" class="form-error hidden"></div>
+      <button class="btn btn-primary full-width" id="authSubmit" type="submit">Entrar</button>
+      <p class="auth-switch"><span id="authSwitchText">Ainda não tem conta?</span> <button type="button" class="text-button" id="toggleAuthMode">Criar conta</button></p>
+      <p class="demo-hint">Demonstração: use <strong>admin@unirovuma.ac.mz</strong> e palavra-passe <strong>admin123</strong> para testar o painel.</p>
+    </form>
+  </dialog>
+
+  <dialog id="bookDialog" class="modal modal-wide">
+    <form id="bookForm" method="dialog">
+      <button class="modal-close" type="button" data-close="bookDialog" aria-label="Fechar">×</button>
+      <span class="eyebrow">GESTÃO DO ACERVO</span><h2 id="bookFormTitle">Cadastrar nova obra</h2>
+      <input id="bookId" type="hidden">
+      <div class="form-grid">
+        <div class="form-group"><label for="bookTitle">Título *</label><input id="bookTitle" required></div>
+        <div class="form-group"><label for="bookAuthor">Autor(es) *</label><input id="bookAuthor" required></div>
+        <div class="form-group"><label for="bookPublisher">Editora</label><input id="bookPublisher"></div>
+        <div class="form-group"><label for="bookYear">Ano de publicação *</label><input id="bookYear" type="number" min="1000" max="2100" required></div>
+        <div class="form-group"><label for="bookIsbn">ISBN</label><input id="bookIsbn" placeholder="ISBN, se aplicável"></div>
+        <div class="form-group"><label for="bookGenre">Género *</label><input id="bookGenre" required placeholder="Ex.: Informática"></div>
+        <div class="form-group span-two"><label for="bookSynopsis">Sinopse</label><textarea id="bookSynopsis" rows="3"></textarea></div>
+        <div class="form-group"><label for="bookCover">URL da capa (opcional)</label><input id="bookCover" type="url" placeholder="https://..."></div>
+        <div class="form-group"><label for="bookFile">Ficheiro PDF/EPUB (opcional)</label><input id="bookFile" type="file" accept=".pdf,.epub,application/pdf"></div>
+      </div>
+      <p class="muted small">Nesta demonstração, os metadados são guardados localmente. Para ficheiros reais e grandes, configure armazenamento no servidor.</p>
+      <div class="modal-actions"><button type="button" class="btn btn-outline" data-close="bookDialog">Cancelar</button><button type="submit" class="btn btn-primary">Guardar obra</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="detailsDialog" class="modal modal-wide"><button class="modal-close" type="button" data-close="detailsDialog" aria-label="Fechar">×</button><div id="bookDetails"></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>
